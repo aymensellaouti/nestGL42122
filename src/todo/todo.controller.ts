@@ -14,6 +14,7 @@ import { TodoModel } from './todo.model';
 import { v4 as uuidv4 } from 'uuid';
 import { AddTodoDto } from './dto/addTodo.dto';
 import { TodoService } from './todo.service';
+import { UpdateTodoDto } from './dto/updateTodo.dto';
 @Controller('todo')
 export class TodoController {
   constructor(private todoService: TodoService) {}
@@ -38,7 +39,7 @@ export class TodoController {
   }
   @Patch(':id')
   updateTodo(
-    @Body() addTodo: Partial<TodoModel>,
+    @Body() addTodo: UpdateTodoDto,
     @Param('id') id: string,
   ): TodoModel {
     return this.todoService.updateTodo(addTodo, id);

@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { TodoModel } from './todo.model';
 import { v4 as uuidv4 } from 'uuid';
 import { AddTodoDto } from './dto/addTodo.dto';
+import { UpdateTodoDto } from './dto/updateTodo.dto';
 
 @Injectable()
 export class TodoService {
@@ -33,7 +34,7 @@ export class TodoService {
     }
     return { count: oldTodosLength - this.todos.length };
   }
-  updateTodo(addTodo: Partial<TodoModel>, id: string): TodoModel {
+  updateTodo(addTodo: UpdateTodoDto, id: string): TodoModel {
     console.log(addTodo);
     const updatedTodo = this.getTodoById(id);
     const { name, description, status } = addTodo;

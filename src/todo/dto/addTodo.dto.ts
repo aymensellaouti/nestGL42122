@@ -1,6 +1,5 @@
 import { IsNotEmpty, MaxLength, MinLength } from 'class-validator';
 import { errorMessages } from '../../utils/utils';
-
 export class AddTodoDto {
   @IsNotEmpty()
   @MinLength(3, {

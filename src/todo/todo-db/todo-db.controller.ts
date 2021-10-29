@@ -11,33 +11,31 @@ import {
   Req,
   UseFilters,
 } from '@nestjs/common';
-import { TodoModel } from './todo.model';
-import { v4 as uuidv4 } from 'uuid';
-import { AddTodoDto } from './dto/addTodo.dto';
-import { TodoService } from './todo.service';
-import { UpdateTodoDto } from './dto/updateTodo.dto';
-import { CustomFilterFilter } from '../filters/custom-filter.filter';
 import { ConfigService } from '@nestjs/config';
+import { v4 as uuidv4 } from 'uuid';
+import { AddTodoDto } from '../dto/addTodo.dto';
+import { UpdateTodoDto } from '../dto/updateTodo.dto';
+import { TodoModel } from '../todo.model';
+import { TodoService } from '../todo.service';
+import { TodoEntity } from '../entities/todo.entity';
 
 @Controller({
   path: 'todo',
-  version: '1',
+  version: '2',
 })
-export class TodoController {
+export class TodoDbController {
   constructor(
     private todoService: TodoService,
     private configService: ConfigService,
   ) {}
   @Get()
-  getTodos(@Req() request): TodoModel[] {
-    console.log(this.configService.get<string>('database.host'));
-
-    return this.todoService.getTodos();
+  getTodos(@Req() request): string {
+    return 'cc';
   }
 
   @Post()
-  addTodo(@Body() addTodoDto: AddTodoDto): TodoModel {
-    return this.todoService.addTodo(addTodoDto);
+  addTodo(@Body() addTodoDto: AddTodoDto): Promise<TodoEntity> {
+    return this.todoService.addDbTodo(addTodoDto);
   }
 
   @Get(':id')

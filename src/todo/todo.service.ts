@@ -3,11 +3,17 @@ import { TodoModel } from './todo.model';
 import { v4 as uuidv4 } from 'uuid';
 import { AddTodoDto } from './dto/addTodo.dto';
 import { UpdateTodoDto } from './dto/updateTodo.dto';
+import { Repository } from 'typeorm';
+import { TodoEntity } from './entities/todo.entity';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class TodoService {
   private todos: TodoModel[] = [];
-  constructor() {
+  constructor(
+    @InjectRepository(TodoEntity)
+    private readonly todoRepository: Repository<TodoEntity>,
+  ) {
     this.todos = [
       new TodoModel(uuidv4(), 'todo1', 'my todo 1'),
       new TodoModel(uuidv4(), 'todo2', 'my todo 2'),
@@ -22,6 +28,9 @@ export class TodoService {
     const newTodo = new TodoModel(uuidv4(), name, description);
     this.todos.push(newTodo);
     return newTodo;
+  }
+  addDbTodo(addTodo: AddTodoDto): Promise<TodoEntity> {
+    return this.todoRepository.save(addTodo);
   }
   getTodo(id: string): TodoModel {
     return this.getTodoById(id);

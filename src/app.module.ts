@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import configuration from './config/configuration';
@@ -7,6 +8,7 @@ import prodConfiguration from './config/prod.configuration';
 import { FirstModule } from './first/first.module';
 import { SecondModule } from './second/second.module';
 import { TodoModule } from './todo/todo.module';
+import { TodoEntity } from './todo/entities/todo.entity';
 
 @Module({
   imports: [
@@ -20,6 +22,17 @@ import { TodoModule } from './todo/todo.module';
           ? configuration
           : prodConfiguration,
       ],
+    }),
+    TypeOrmModule.forRoot({
+      type: 'mysql',
+      host: 'localhost',
+      port: 3306,
+      username: 'root',
+      password: '',
+      database: 'gl42021',
+      autoLoadEntities: true,
+      synchronize: true,
+      logging: true,
     }),
   ],
   controllers: [AppController],

@@ -3,9 +3,11 @@ import { TodoModel } from './todo.model';
 import { v4 as uuidv4 } from 'uuid';
 import { AddTodoDto } from './dto/addTodo.dto';
 import { UpdateTodoDto } from './dto/updateTodo.dto';
-import { Repository } from 'typeorm';
+import { Repository, UpdateResult } from 'typeorm';
 import { TodoEntity } from './entities/todo.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { filterByDate } from '../generics/db/date-filter';
+import { DateIntervalDto } from './dto/date-interval.dto';
 
 @Injectable()
 export class TodoService {
@@ -19,7 +21,35 @@ export class TodoService {
       new TodoModel(uuidv4(), 'todo2', 'my todo 2'),
     ];
   }
-  getTodos(): TodoModel[] {
+  getTodos(): Promise<TodoEntity[]> {
+    return this.todoRepository.find();
+  }
+  addDbTodo(addTodo: AddTodoDto): Promise<TodoEntity> {
+    return this.todoRepository.save(addTodo);
+  }
+  getTodoDb(id: number): Promise<TodoEntity> {
+    return this.todoRepository.findOne(id);
+  }
+  async updateDBTodo(
+    updateTodo: UpdateTodoDto,
+    id: number,
+  ): Promise<TodoEntity> {
+    const newTodo = await this.todoRepository.preload({
+      id,
+      ...updateTodo,
+    });
+    if (newTodo) {
+      return this.todoRepository.save(newTodo);
+    }
+    throw new NotFoundException('Todo innexistant');
+  }
+  softDelete(id: number): Promise<UpdateResult> {
+    return this.todoRepository.softDelete(id);
+  }
+  restore(id: number): Promise<UpdateResult> {
+    return this.todoRepository.restore(id);
+  }
+  getFakeTodos(): TodoModel[] {
     return this.todos;
   }
 
@@ -29,12 +59,11 @@ export class TodoService {
     this.todos.push(newTodo);
     return newTodo;
   }
-  addDbTodo(addTodo: AddTodoDto): Promise<TodoEntity> {
-    return this.todoRepository.save(addTodo);
-  }
+
   getTodo(id: string): TodoModel {
     return this.getTodoById(id);
   }
+
   deleteTodo(id: string): { count: number } {
     const oldTodosLength = this.todos.length;
     this.todos = this.todos.filter((actualTodo) => actualTodo.id !== id);
@@ -59,5 +88,16 @@ export class TodoService {
       throw new NotFoundException('Todo inexistant');
     }
     return todo;
+  }
+
+  getTodoByIntervalDate(
+    dateTimeInterval: DateIntervalDto,
+  ): Promise<TodoEntity[]> {
+    const { dateMin, dateMax } = dateTimeInterval;
+    const qb = this.todoRepository.createQueryBuilder();
+    console.log(qb);
+    filterByDate(qb, 'created_at', dateMin, dateMax);
+    console.log(qb);
+    return qb.getMany();
   }
 }

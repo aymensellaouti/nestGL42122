@@ -18,7 +18,8 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "seed:db": "ts-node src/command/seed-db.command.ts"
   },
   "dependencies": {
     "@nestjs/common": "^8.0.0",
@@ -28,10 +29,12 @@
     "@nestjs/platform-express": "^8.0.0",
     "@nestjs/swagger": "^5.1.0",
     "@nestjs/typeorm": "^8.0.2",
+    "@types/faker": "^5.5.9",
     "class-transformer": "^0.4.0",
     "class-validator": "^0.13.1",
     "cross-env": "^7.0.3",
     "dotenv": "^10.0.0",
+    "faker": "^5.5.3",
     "morgan": "^1.10.0",
     "mysql2": "^2.3.2",
     "reflect-metadata": "^0.1.13",

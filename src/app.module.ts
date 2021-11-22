@@ -9,6 +9,9 @@ import { FirstModule } from './first/first.module';
 import { SecondModule } from './second/second.module';
 import { TodoModule } from './todo/todo.module';
 import { TodoEntity } from './todo/entities/todo.entity';
+import { CvModule } from './cv/cv.module';
+import { SkillModule } from './skill/skill.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -34,6 +37,9 @@ import { TodoEntity } from './todo/entities/todo.entity';
       synchronize: true,
       logging: true,
     }),
+    CvModule,
+    SkillModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],

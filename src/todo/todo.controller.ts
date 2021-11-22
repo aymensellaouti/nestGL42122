@@ -32,7 +32,7 @@ export class TodoController {
   getTodos(@Req() request): TodoModel[] {
     console.log(this.configService.get<string>('database.host'));
 
-    return this.todoService.getTodos();
+    return this.todoService.getFakeTodos();
   }
 
   @Post()

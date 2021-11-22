@@ -8,6 +8,7 @@ import {
   Patch,
   Post,
   Put,
+  Query,
   Req,
   UseFilters,
 } from '@nestjs/common';
@@ -18,6 +19,7 @@ import { UpdateTodoDto } from '../dto/updateTodo.dto';
 import { TodoModel } from '../todo.model';
 import { TodoService } from '../todo.service';
 import { TodoEntity } from '../entities/todo.entity';
+import { DateIntervalDto } from '../dto/date-interval.dto';
 
 @Controller({
   path: 'todo',
@@ -29,8 +31,14 @@ export class TodoDbController {
     private configService: ConfigService,
   ) {}
   @Get()
-  getTodos(@Req() request): string {
-    return 'cc';
+  getTodos(@Req() request): Promise<TodoEntity[]> {
+    return this.todoService.getTodos();
+  }
+  @Get('/date')
+  getTodosByDate(
+    @Query() dateTimeInterval: DateIntervalDto,
+  ): Promise<TodoEntity[]> {
+    return this.todoService.getTodoByIntervalDate(dateTimeInterval);
   }
 
   @Post()

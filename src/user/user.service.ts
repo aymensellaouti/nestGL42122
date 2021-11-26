@@ -12,4 +12,9 @@ export class UserService extends CrudService<User> {
   ) {
     super(userRepository);
   }
+  findUserByUsernameOrEmail(username: string, email: string) {
+    return this.userRepository.findOne({
+      where: [{ username }, { email }],
+    });
+  }
 }

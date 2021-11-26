@@ -17,15 +17,14 @@ export class User extends TimeStampEntity {
   email: string;
   @Column()
   password: string;
-  /*   @Column()
-  salt: string;
- */
-/*   @Column({
+/*   @Column()
+  salt: string; */
+  @Column({
     type: 'enum',
     enum: UserRoleEnum,
     default: UserRoleEnum.user,
   })
-  role: UserRoleEnum; */
+  role: UserRoleEnum;
   @OneToMany((targetEntity) => Cv, (cv) => cv.user, {})
   cvs: Cv[];
 }

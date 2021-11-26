@@ -12,6 +12,8 @@ import { TodoEntity } from './todo/entities/todo.entity';
 import { CvModule } from './cv/cv.module';
 import { SkillModule } from './skill/skill.module';
 import { UserModule } from './user/user.module';
+import { MulterModule } from '@nestjs/platform-express';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -40,6 +42,8 @@ import { UserModule } from './user/user.module';
     CvModule,
     SkillModule,
     UserModule,
+    MulterModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

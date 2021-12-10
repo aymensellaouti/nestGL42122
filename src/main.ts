@@ -10,7 +10,7 @@ import { DurationInterceptor } from './interceptors/duration.interceptor';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   dotenv.config();
-  console.log(process.env.NODE_ENV);
+  console.log(process.env.SECRET);
   app.enableVersioning({
     type: VersioningType.URI,
   });

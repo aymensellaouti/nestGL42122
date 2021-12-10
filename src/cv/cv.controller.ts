@@ -8,6 +8,8 @@ import {
   Delete,
   UseInterceptors,
   UploadedFile,
+  UseGuards,
+  Req,
 } from '@nestjs/common';
 import { FileInterceptor, MulterModule } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
@@ -15,6 +17,9 @@ import { CvService } from './cv.service';
 import { CreateCvDto } from './dto/create-cv.dto';
 import { UpdateCvDto } from './dto/update-cv.dto';
 import { editFileName } from '../generics/uploads/edit-file-name';
+import { AuthGuard } from '@nestjs/passport';
+import { GetUser } from '../auth/decorators/user.decorator';
+import { User } from 'src/user/entities/user.entity';
 
 @Controller('cv')
 export class CvController {
@@ -38,7 +43,9 @@ export class CvController {
   }
 
   @Get()
-  findAll() {
+  @UseGuards(AuthGuard('jwt'))
+  findAll(@GetUser() user: User) {
+    console.log('user:', user);
     return this.cvService.findAll({});
   }
 

@@ -6,10 +6,16 @@ import { SignInDto } from './dto/signin.dto';
 import { UserService } from '../user/user.service';
 
 import * as bcrypt from 'bcrypt';
+import { JwtService } from '@nestjs/jwt';
+import { PayloadDto } from './dto/payload.dto';
+import { SignInResponseDto } from './dto/signin-response.dto';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly jwtService: JwtService,
+  ) {}
   async register(registerDto: RegisterDto): Promise<User> {
     /* 
             Recherche le User
@@ -36,5 +42,33 @@ export class AuthService {
     }
   }
 
-  /*     signin(credentials: SignInDto): Promise<User> {} */
+  async signin(credentials: SignInDto): Promise<SignInResponseDto> {
+    /* 
+        1- si le   user existe ou pas 
+        2- on vérifie le mot de passe 
+        */
+    const { username, password } = credentials;
+    const user = await this.userService.findUserByUsernameOrEmail(
+      username,
+      username,
+    );
+    if (!user) {
+      throw new BadRequestException('Bad credentials !!');
+    } else {
+      const isAuthenticated = await bcrypt.compare(password, user.password);
+      if (!isAuthenticated) {
+        throw new BadRequestException('Bad credentials  !!');
+      } else {
+        const payload: PayloadDto = {
+          username: user.username,
+          email: user.email,
+          role: user.role,
+        };
+        const jwt = this.jwtService.sign(payload);
+        return {
+          token: jwt,
+        };
+      }
+    }
+  }
 }
